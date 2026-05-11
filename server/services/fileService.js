@@ -2,8 +2,9 @@ import fs from "fs-extra";
 import crypto from "node:crypto";
 import path from "node:path";
 
-const tempRoot = path.resolve("temp");
-const outputRoot = path.resolve("output");
+const runtimeRoot = process.env.VERCEL ? path.join("/tmp", "assetking") : process.cwd();
+const tempRoot = path.join(runtimeRoot, "temp");
+const outputRoot = path.join(runtimeRoot, "output");
 
 export async function ensureWorkingDirs() {
   await fs.ensureDir(tempRoot);

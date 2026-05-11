@@ -38,3 +38,15 @@ npm run dev
 Client: `http://localhost:5173`
 
 Server: `http://localhost:5000`
+
+## Deploy To Vercel
+
+This repo is Vercel-ready. The React app is built from `client/`, and the Express generator runs through Vercel Functions at `/api/generate`.
+
+No paid AI key is required when using:
+
+```bash
+AI_PROVIDER=template
+```
+
+If no `SERPAPI_KEY` is configured, the ZIP still downloads with local fallback JPGs and raw HTML in `features.html` plus `features.txt`.

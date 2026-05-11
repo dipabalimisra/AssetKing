@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.env
+server/.env
+server/temp/
+server/output/
+logs/
+server/logs/
+npm-debug.log*

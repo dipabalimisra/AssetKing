@@ -14,6 +14,16 @@ function filenameFromProduct(product) {
 }
 
 async function getErrorMessage(error) {
+  const stringifyMessage = (value) => {
+    if (!value) return "";
+    if (typeof value === "string") return value;
+    if (typeof value.message === "string") return value.message;
+    if (typeof value.error === "string") return value.error;
+    if (value.error && typeof value.error.message === "string") return value.error.message;
+    if (typeof value.code === "string") return `${value.code}: ${value.message || "Generation failed."}`;
+    return JSON.stringify(value);
+  };
+
   if (error.response?.data instanceof Blob) {
     try {
       const text = await error.response.data.text();
@@ -21,7 +31,7 @@ async function getErrorMessage(error) {
 
       try {
         const parsed = JSON.parse(text);
-        return parsed.error || text;
+        return stringifyMessage(parsed.error || parsed);
       } catch {
         return text;
       }
@@ -30,7 +40,7 @@ async function getErrorMessage(error) {
     }
   }
 
-  return error.response?.data?.error || error.message || "Generation failed.";
+  return stringifyMessage(error.response?.data?.error || error.response?.data || error.message) || "Generation failed.";
 }
 
 export default function App() {

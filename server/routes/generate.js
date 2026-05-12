@@ -28,15 +28,20 @@ router.post("/", async (req, res, next) => {
     await fs.writeFile(featuresTextPath, featuresHTML, "utf8");
 
     let jpgPaths;
+    let debugMessage = "Images generated successfully.";
 
     try {
       const imageUrls = await searchImages(productInfo.imageSearchKeyword || `${rawProduct} product`);
       const downloadedPaths = await downloadImages(imageUrls, paths.workDir);
       jpgPaths = await convertToJPG(downloadedPaths, paths.workDir);
     } catch (imageError) {
+      debugMessage = `Image generation failed: ${imageError.publicMessage || imageError.message}\nStack: ${imageError.stack}`;
       console.warn(`Image search failed, using local fallback images: ${imageError.publicMessage || imageError.message}`);
       jpgPaths = await createFallbackImages(productInfo.cleanTitle || rawProduct, paths.workDir);
     }
+
+    const debugPath = path.join(paths.workDir, "debug.txt");
+    await fs.writeFile(debugPath, debugMessage, "utf8");
 
     const zipPath = await createZip({
       outputPath: paths.zipPath,
@@ -44,7 +49,8 @@ router.post("/", async (req, res, next) => {
         { path: jpgPaths[0], name: "image1.jpg" },
         { path: jpgPaths[1], name: "image2.jpg" },
         { path: featuresPath, name: "features.html" },
-        { path: featuresTextPath, name: "features.txt" }
+        { path: featuresTextPath, name: "features.txt" },
+        { path: debugPath, name: "debug.txt" }
       ]
     });
 

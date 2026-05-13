@@ -17,7 +17,7 @@ Create `server/.env` from `server/.env.example`:
 
 ```bash
 AI_PROVIDER=template
-OPENAI_API_KEY=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
+OPENAI_API_KEY=
 OPENAI_MODEL=gpt-4o-mini
 GEMINI_API_KEY=
 GEMINI_MODEL=gemini-2.5-flash-lite
